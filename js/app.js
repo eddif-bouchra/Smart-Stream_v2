@@ -1,8 +1,7 @@
 
-import { afficheChaine } from "./ui.js";
+import { afficheChaine  } from "./ui.js";
 import { initRecherche } from "./search.js";
 import { afficheCountrys } from "./ui.js";
-
 export async function getChannels() {
     const response = await fetch("https://6af34a76d2377d6c3704d720.mockapi.io/channals");
 
