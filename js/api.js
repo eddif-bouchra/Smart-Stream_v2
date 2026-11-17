@@ -39,3 +39,14 @@ export const updateChannel = async (id , changes) => {
     return response.json();
     
 }
+
+export const deleteChannel = async(id) => {
+    const response = await fetch(`${API_URL}/${id}`,{
+       //pricise la chaine que va supprimer 
+       method:'DELETE',
+    })
+    if(!response.ok){
+        throw new Error ("Failed to delete channel ")
+    }
+    return response.json();
+}
