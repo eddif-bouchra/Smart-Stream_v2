@@ -26,4 +26,16 @@ export const createChannel = async(channel) => {
     return response.json();
 }
 
-export const 
+export const updateChannel = async (id , changes) => {
+    const response = await fetch(`${API_URL}/${id}` , {
+        //pricise la chaine que va modifier
+        method:'PUT',
+        headers: {'Content-Type' : 'application/json; charset=UTF-8'},
+        body : JSON.stringify(changes)
+    })
+    if(!response.ok){
+        throw new Error("Failed to update channel");
+    }
+    return response.json();
+    
+}
