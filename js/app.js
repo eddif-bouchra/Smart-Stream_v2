@@ -2,6 +2,11 @@
 import { afficheChaine  } from "./ui.js";
 import { initRecherche } from "./search.js";
 import { afficheCountrys } from "./ui.js";
+import { updateChannel } from "./api.js";
+//import { getChannels, createChannel } from "./api.js";
+const loading = document.getElementById("loading");
+const errorMessage = document.getElementById("errorMessage");
+const channelsList = document.getElementById("channelsList")
 export async function getChannels() {
     const response = await fetch("https://6af34a76d2377d6c3704d720.mockapi.io/channals");
 
@@ -17,18 +22,62 @@ export async function getChannels() {
 
 async function init() {
     try {
+         loading.classList.remove("hidden");
+         loading.classList.add("flex");
         const chaines = await getChannels();
+        /*const result = await createChannel({
+    channelNumber: "2001",
+    name: "Test Channel",
+    category: "SPORT",
+    logo: "https://placehold.co/60x60?text=Test",
+    previewImage: "https://placehold.co/800x450?text=Test",
+    isFavorite: false,
+    isBlacklisted: false
+});
+console.log(result)*/
+        /*const result = await updateChannel("1", {
+    isFavorite: false
+});
+
+console.log(result);*/
         const countries = [...new Set(chaines.map((e) => e.country))];
         document.getElementById("nbrChaine").textContent = chaines.length;
-
         afficheChaine(chaines);
+        channelsList.addEventListener("click",  async e => {
+            const btn = e.target.closest("button");
+            if(!btn) return;
+            const id = btn.closest("[data-id]").dataset.id;
+            const action = btn.dataset.action;
+            if(action === "favorite"){
+                const channel = chaines.find((c) => c.id === id);
+                const newValue = !channel.isFavorite;
+                try{
+                    await updateChannel(id,{isFavorite:newValue});
+                    channel.isFavorite = newValue;
+                    afficheChaine(chaines)
+            }catch (error){
+                console.log(error)
+            }
+            
+            }
+        });
+    
+        
         initRecherche(chaines);
         afficheCountrys(countries);
+        
     } catch (erreur) {
-        console.log("Erreur :", erreur);
+        
+
+        errorMessage.classList.remove("hidden");
+        errorMessage.textContent = "Impossible de charger les chaînes. Veuillez réessayer"
+    }finally{
+        loading.classList.remove("flex");
+        loading.classList.add("hidden");
     }
 }
 
 init();
+
 
 
