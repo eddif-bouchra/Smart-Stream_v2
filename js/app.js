@@ -6,7 +6,9 @@ import { updateChannel } from "./api.js";
 //import { getChannels, createChannel } from "./api.js";
 const loading = document.getElementById("loading");
 const errorMessage = document.getElementById("errorMessage");
-const channelsList = document.getElementById("channelsList")
+const channelsList = document.getElementById("channelsList");
+const toutes = document.getElementById("btnAll");
+const favorise = document.getElementById("btnFavoris")
 export async function getChannels() {
     const response = await fetch("https://6af34a76d2377d6c3704d720.mockapi.io/channals");
 
@@ -17,6 +19,7 @@ export async function getChannels() {
     const data = await response.json();
     console.log(data);
     return data;
+    
 }
 
 
@@ -25,6 +28,7 @@ async function init() {
          loading.classList.remove("hidden");
          loading.classList.add("flex");
         const chaines = await getChannels();
+        
         /*const result = await createChannel({
     channelNumber: "2001",
     name: "Test Channel",
@@ -54,16 +58,24 @@ console.log(result);*/
                 try{
                     await updateChannel(id,{isFavorite:newValue});
                     channel.isFavorite = newValue;
-                    afficheChaine(chaines)
+                    filtrerChaines();
             }catch (error){
                 console.log(error)
             }
             
             }
         });
-    
+        favorise.addEventListener("click",() =>{
+            const favoris = chaines.filter((chaine) => {
+                return chaine.isFavorite === true;
+            })
+            afficheChaine(favoris);
+        })
+        toutes.addEventListener("click",() =>{
+            afficheChaine(chaines)
+        })
         
-        initRecherche(chaines);
+        const filtrerChaines = initRecherche(chaines);
         afficheCountrys(countries);
         
     } catch (erreur) {
