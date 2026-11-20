@@ -57,11 +57,10 @@ Smart-Stream/
 ## 🚀 Déploiement
 
 Application en ligne :  
-https://eddif-bouchra.github.io/Smart-Stream/
+https://eddif-bouchra.github.io/Smart-Stream_v2/
 
 Code source :  
-https://github.com/eddif-bouchra/Smart-Stream
-
+https://github.com/eddif-bouchra/Smart-Stream_v2
 ## 📚 Concepts étudiés
 
 - Variables, constantes, tableaux et objets.
