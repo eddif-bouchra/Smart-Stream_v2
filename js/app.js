@@ -2,13 +2,20 @@
 import { afficheChaine  } from "./ui.js";
 import { initRecherche } from "./search.js";
 import { afficheCountrys } from "./ui.js";
-import { updateChannel , deleteChannel } from "./api.js";
+import { updateChannel, deleteChannel, createChannel } from "./api.js";
 //import { getChannels, createChannel } from "./api.js";
 const loading = document.getElementById("loading");
 const errorMessage = document.getElementById("errorMessage");
 const channelsList = document.getElementById("channelsList");
 const toutes = document.getElementById("btnAll");
-const favorise = document.getElementById("btnFavoris")
+const favorise = document.getElementById("btnFavoris");
+const cForm = document.getElementById("cForm");
+const NChaine = document.getElementById("NChaine");
+const NChaineN = document.getElementById("NChaineN");
+const mForm = document.getElementById("mForm");
+const btnAjouter = document.getElementById("btnAjouter");
+const modal = document.getElementById("modal");
+const btnFermer = document.getElementById("btnFermer");
 export async function getChannels() {
     const response = await fetch("https://6af34a76d2377d6c3704d720.mockapi.io/channals");
 
@@ -87,6 +94,9 @@ console.log(result);*/
         toutes.addEventListener("click",() =>{
             afficheChaine(chaines)
         })
+        cForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+        });
         
 
         afficheCountrys(countries);
@@ -103,6 +113,12 @@ console.log(result);*/
 }
 
 init();
-
-
+btnAjouter.addEventListener("click", () => {
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+});
+btnFermer.addEventListener("click", () => {
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+});
 
