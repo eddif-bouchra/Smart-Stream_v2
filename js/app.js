@@ -27,7 +27,7 @@ async function init() {
     try {
          loading.classList.remove("hidden");
          loading.classList.add("flex");
-        const chaines = await getChannels();
+        let chaines = await getChannels();
         const filtrerChaines = initRecherche(chaines);
         
         /*const result = await createChannel({
@@ -70,9 +70,8 @@ console.log(result);*/
                 if(confirmation ){
                     try{
                         await deleteChannel(id);
-                        const i = chaines.findIndex((c) => c.id === id);
-                        chaines.splice(i,1);
-                        filtrerChaines();
+                        chaines = chaines.filter((c) => c.id !== id);
+                        afficheChaine(chaines);
                     }catch (error){
                         console.log(error);
                     }
