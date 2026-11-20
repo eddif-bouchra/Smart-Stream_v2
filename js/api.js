@@ -109,7 +109,8 @@ const loadChannels = async () => {
     message.textContent = "";
     renderChannels(channels);
   } catch (error) {
-    message.textContent = "Impossible de charger les chaînes.";
+    // message.textContent = "Impossible de charger les chaînes.";
+  console.error(error)
   }
 };
 loadChannels();
