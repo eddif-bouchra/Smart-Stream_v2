@@ -239,6 +239,12 @@
   .w-12 {
     width: calc(var(--spacing) * 12);
   }
+  .w-\[30\%\] {
+    width: 30%;
+  }
+  .w-\[30\] {
+    width: 30;
+  }
   .w-full {
     width: 100%;
   }
@@ -485,6 +491,21 @@
     }
   }
   @media (width >= 64rem) {
+    .lg\:w-\[30\%\] {
+      width: 30%;
+    }
+    .lg\:w-\[30\] {
+      width: 30;
+    }
+    .lg\:w-\[35\%\] {
+      width: 35%;
+    }
+    .lg\:w-\[50\%\] {
+      width: 50%;
+    }
+    .lg\:w-\[50\] {
+      width: 50;
+    }
     .lg\:grid-cols-4 {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }

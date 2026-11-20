@@ -2,7 +2,7 @@
 import { afficheChaine  } from "./ui.js";
 import { initRecherche } from "./search.js";
 import { afficheCountrys } from "./ui.js";
-import { updateChannel } from "./api.js";
+import { updateChannel , deleteChannel } from "./api.js";
 //import { getChannels, createChannel } from "./api.js";
 const loading = document.getElementById("loading");
 const errorMessage = document.getElementById("errorMessage");
@@ -28,6 +28,7 @@ async function init() {
          loading.classList.remove("hidden");
          loading.classList.add("flex");
         const chaines = await getChannels();
+        const filtrerChaines = initRecherche(chaines);
         
         /*const result = await createChannel({
     channelNumber: "2001",
@@ -64,6 +65,19 @@ console.log(result);*/
             }
             
             }
+            if(action === "delete"){
+                const confirmation = confirm("Supprimer cette chaine ?");
+                if(confirmation ){
+                    try{
+                        await deleteChannel(id);
+                        const i = chaines.findIndex((c) => c.id === id);
+                        chaines.splice(i,1);
+                        filtrerChaines();
+                    }catch (error){
+                        console.log(error);
+                    }
+                }
+            }
         });
         favorise.addEventListener("click",() =>{
             const favoris = chaines.filter((chaine) => {
@@ -75,7 +89,7 @@ console.log(result);*/
             afficheChaine(chaines)
         })
         
-        const filtrerChaines = initRecherche(chaines);
+
         afficheCountrys(countries);
         
     } catch (erreur) {
