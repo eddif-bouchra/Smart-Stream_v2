@@ -61,6 +61,7 @@ console.log(result);*/
             const id = btn.closest("[data-id]").dataset.id;
             const action = btn.dataset.action;
             if(action === "favorite"){
+                
                 const channel = chaines.find((c) => c.id === id);
                 const newValue = !channel.isFavorite;
                 try{
@@ -95,7 +96,26 @@ console.log(result);*/
             afficheChaine(chaines)
         })
         cForm.addEventListener("submit", async (e) => {
+           // localStorage.setItem("filter", "favorites");
             e.preventDefault();
+            const channelNumber = NChaine.value.trim();
+            const name = NChaineN.value.trim();
+            if(channelNumber === "" || name === ""){
+                mForm.innerHTML ="le champ vide";
+                return
+            }
+            try{
+                const nouvelleChaine = await createChannel({name,channelNumber,isFavorite: false,isBlacklisted: false});
+                chaines.push(nouvelleChaine);
+                afficheChaine(chaines);
+                modal.classList.add("hidden");
+                modal.classList.remove("flex");
+                cForm.reset();
+                mForm.innerHTML="";
+                document.getElementById("nbrChaine").textContent = chaines.length;
+            }catch(error){
+                console.log(error);
+            }
         });
         
 
@@ -105,7 +125,10 @@ console.log(result);*/
         
 
         errorMessage.classList.remove("hidden");
-        errorMessage.textContent = "Impossible de charger les chaînes. Veuillez réessayer"
+      const errorMessage2 =  document.getElementById("error-message")
+      errorMessage2.classList ="bg-red-400 text-white text-lg rounded-lg px-4"
+      errorMessage2.textContent = "Impossible de charger les chaînes. Veuillez réessayer"
+        // errorMessage.textContent = "Impossible de charger les chaînes. Veuillez réessayer"
     }finally{
         loading.classList.remove("flex");
         loading.classList.add("hidden");
