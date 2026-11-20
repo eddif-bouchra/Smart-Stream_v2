@@ -1,504 +1,633 @@
-# Documentation – Sprint II
+# Documentation – Smart Stream TV
 
-# 1. Drag and Drop en JavaScript
+# 1. API REST et MockAPI
 
 ### Définition
-Le Drag and Drop est une fonctionnalité qui permet à l'utilisateur de déplacer un élément avec la souris vers une autre zone.
 
-### Événements principaux
-- `dragstart` : déclenché lorsqu'on commence à déplacer un élément.
-- `dragover` : déclenché lorsqu'un élément passe au-dessus d'une zone.
-- `drop` : déclenché lorsqu'on dépose l'élément.
-- `dragend` : déclenché lorsque le déplacement se termine.
+Une API (Application Programming Interface) permet à une application de communiquer avec un autre service pour échanger des données.
+
+Une API REST utilise des requêtes HTTP pour manipuler des ressources.
+
+### Définition de MockAPI
+
+MockAPI est un service qui permet de créer une fausse API afin de tester les opérations CRUD sans développer un véritable serveur.
 
 ### Exemple
+
 ```javascript
-element.addEventListener("dragstart", function(e) {
-    e.dataTransfer.setData("text", e.target.id);
-});
+const API_URL = "https://example.com/channels";
 
-zone.addEventListener("dragover", function(e) {
-    e.preventDefault();
-});
-
-zone.addEventListener("drop", function(e) {
-    e.preventDefault();
-    let id = e.dataTransfer.getData("text");
-    console.log(id);
-});
+fetch(API_URL)
+    .then(response => response.json())
+    .then(data => console.log(data));
 ```
 
+### Application dans Smart Stream TV
 
+MockAPI est utilisé pour stocker et gérer les chaînes télévisées. Chaque chaîne contient notamment :
 
-# 2. LocalStorage vs SessionStorage
+- `id` : identifiant de la chaîne.
+- `channelNumber` : numéro de la chaîne.
+- `name` : nom de la chaîne.
+- `category` : catégorie.
+- `logo` : logo de la chaîne.
+- `previewImage` : image de prévisualisation.
+- `isFavorite` : indique si la chaîne est favorite.
+- `isBlacklisted` : indique si la chaîne est blacklistée.
+
+---
+
+# 2. Fetch API en JavaScript
 
 ### Définition
-LocalStorage et SessionStorage permettent de stocker des données dans le navigateur.
 
-### Différences
+Fetch API est une fonctionnalité JavaScript native qui permet d'effectuer des requêtes HTTP pour récupérer ou envoyer des données.
 
-| LocalStorage | SessionStorage |
-|---|---|
-| Les données restent après la fermeture du navigateur. | Les données sont supprimées à la fin de la session de l'onglet. |
-| Stockage persistant. | Stockage temporaire. |
-| Accessible lors des visites suivantes sur le même site. | Accessible uniquement dans la session de l'onglet concerné. |
-
-### Méthodes principales
-- `setItem()` : enregistrer une donnée.
-- `getItem()` : récupérer une donnée.
-- `removeItem()` : supprimer une donnée.
-- `clear()` : supprimer toutes les données du stockage concerné.
-
-### Exemple LocalStorage
-```javascript
-localStorage.setItem("nom", "Auchan");
-
-let nom = localStorage.getItem("nom");
-
-console.log(nom);
-```
-
-### Exemple SessionStorage
-```javascript
-sessionStorage.setItem("utilisateur", "Client");
-
-let utilisateur = sessionStorage.getItem("utilisateur");
-
-console.log(utilisateur);
-```
-
-### Stocker un objet ou un tableau
-Le stockage Web conserve des chaînes de caractères. Pour enregistrer un objet ou un tableau, on utilise `JSON.stringify()`.
+### Syntaxe
 
 ```javascript
-let panier = [
-    { id: 1, nom: "Bananes", prix: 12.90 }
-];
-
-localStorage.setItem("panier", JSON.stringify(panier));
-```
-
-Pour récupérer les données sous leur forme initiale, on utilise `JSON.parse()`.
-
-```javascript
-let panierStocke = JSON.parse(localStorage.getItem("panier"));
-```
-
-### Application dans Auchan
-LocalStorage peut permettre de sauvegarder le panier afin de conserver les produits après l'actualisation de la page.
-
-# 3. Formulaire dynamique avec clonage de nœud
-
-### Définition
-Un formulaire dynamique permet d'ajouter ou de supprimer des champs selon les actions de l'utilisateur.
-
-Le clonage de nœud permet de copier un élément HTML existant grâce à `cloneNode()`.
-
-### Méthode cloneNode()
-- `cloneNode(true)` : copie l'élément et ses enfants.
-- `cloneNode(false)` : copie uniquement l'élément sans ses enfants.
-
-### Exemple
-```javascript
-let formulaire = document.getElementById("formulaire");
-let champ = document.getElementById("champ");
-
-let nouveauChamp = champ.cloneNode(true);
-
-formulaire.appendChild(nouveauChamp);
-```
-
-### Affichage des données
-Pour récupérer les valeurs d'un formulaire, on peut utiliser `.value`.
-
-```javascript
-let nom = document.getElementById("nom").value;
-
-console.log(nom);
-```
-
-### Application
-Cette technique permet de créer des formulaires avec plusieurs champs ajoutés dynamiquement et d'afficher les informations saisies par l'utilisateur.
-
-# 4. Callback Function
-
-### Définition
-Une Callback Function est une fonction passée comme argument à une autre fonction afin d'être exécutée ultérieurement.
-
-### Exemple
-```javascript
-function afficher(nom, callback) {
-    console.log("Bonjour " + nom);
-    callback();
-}
-
-function terminer() {
-    console.log("Opération terminée");
-}
-
-afficher("Client", terminer);
-```
-
-### Résultat
-```text
-Bonjour Client
-Opération terminée
-```
-
-### Application
-Les callbacks sont utilisés dans les événements JavaScript et dans les opérations asynchrones, notamment avec `then()` de Fetch.
-
-# 5. Hoisting en JavaScript
-
-### Définition
-Le Hoisting est un mécanisme JavaScript qui concerne la déclaration des variables et des fonctions. Le moteur JavaScript traite les déclarations avant l'exécution du code.
-
-### Exemple avec var
-```javascript
-console.log(age);
-
-var age = 20;
-```
-
-Résultat :
-```text
-undefined
-```
-
-La déclaration de `var` est traitée avant son initialisation.
-
-### Exemple avec let et const
-```javascript
-console.log(nom);
-
-let nom = "Auchan";
-```
-
-Ce code provoque une erreur car la variable est dans la Temporal Dead Zone avant son initialisation.
-
-### Exemple avec une fonction déclarée
-```javascript
-bonjour();
-
-function bonjour() {
-    console.log("Bonjour");
-}
-```
-
-La fonction peut être appelée avant sa déclaration.
-
-# 6. Les objets en JavaScript
-
-### Définition
-Un objet est une structure qui permet de regrouper plusieurs informations sous forme de propriétés et de valeurs.
-
-### Exemple
-```javascript
-let produit = {
-    id: 1,
-    nom: "Bananes",
-    prix: 12.90,
-    categorie: "Fruits"
-};
-```
-
-### Accéder aux propriétés
-```javascript
-console.log(produit.nom);
-console.log(produit["prix"]);
-```
-
-### Modifier une propriété
-```javascript
-produit.prix = 15;
-```
-
-### Ajouter une propriété
-```javascript
-produit.disponible = true;
-```
-
-### Supprimer une propriété
-```javascript
-delete produit.disponible;
-```
-
-### Application dans Auchan
-Chaque produit du catalogue est représenté par un objet contenant son identifiant, son nom, son prix, sa catégorie et son image.
-
-# 7. Construire une grille responsive avec Tailwind CSS
-
-### Définition
-Tailwind CSS est un framework CSS qui permet de construire des interfaces en utilisant des classes utilitaires directement dans le HTML.
-
-### Grid
-CSS Grid permet de créer une disposition en lignes et en colonnes.
-
-### Exemple
-```html
-<div class="grid grid-cols-2 gap-4">
-    <div>Produit 1</div>
-    <div>Produit 2</div>
-    <div>Produit 3</div>
-    <div>Produit 4</div>
-</div>
-```
-
-### Responsive Design
-Tailwind utilise des préfixes pour adapter l'affichage selon la largeur de l'écran.
-
-- `sm:` : petit écran.
-- `md:` : écran moyen.
-- `lg:` : grand écran.
-- `xl:` : très grand écran.
-
-### Exemple responsive
-```html
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-    <!-- Produits -->
-</div>
-```
-
-La grille affiche une colonne sur les petits écrans, deux colonnes à partir de `sm` et quatre colonnes à partir de `lg`.
-
-### Application dans Auchan
-La grille permet d'afficher les produits du catalogue de manière responsive.
-
-# 8. Fetch et Axios pour récupérer des données externes
-
-### Définition
-Fetch et Axios sont deux solutions permettant d'effectuer des requêtes HTTP afin de récupérer ou envoyer des données.
-
-### Fetch
-Fetch est une API JavaScript intégrée aux navigateurs.
-
-```javascript
-fetch("./data/data.json")
-    .then(function(response) {
-        return response.json();
-    })
-    .then(function(data) {
+fetch(url)
+    .then(response => response.json())
+    .then(data => {
         console.log(data);
     })
-    .catch(function(error) {
+    .catch(error => {
         console.log(error);
     });
 ```
 
-### Axios
-Axios est une bibliothèque JavaScript qui doit être installée ou importée dans le projet.
+### Les principales méthodes HTTP
 
-```javascript
-axios.get("https://api.example.com/produits")
-    .then(function(response) {
-        console.log(response.data);
-    })
-    .catch(function(error) {
-        console.log(error);
-    });
-```
+- `GET` : récupérer des données.
+- `POST` : créer une nouvelle ressource.
+- `PUT` : remplacer ou mettre à jour une ressource.
+- `PATCH` : modifier une partie d'une ressource.
+- `DELETE` : supprimer une ressource.
 
-### Différences
+### Application dans Smart Stream TV
 
-| Fetch | Axios |
-|---|---|
-| API native du navigateur. | Bibliothèque externe. |
-| Utilise `response.json()` pour lire du JSON. | Les réponses JSON sont généralement accessibles dans `response.data`. |
-| Ne rejette pas automatiquement les erreurs HTTP comme 404 ou 500. | Rejette par défaut les réponses HTTP hors de la plage 2xx. |
-| Nécessite une vérification de `response.ok`. | Fournit des informations détaillées sur la réponse et l'erreur. |
+Fetch est utilisé pour communiquer avec MockAPI et effectuer les opérations de récupération, création, modification et suppression des chaînes.
 
-### Application dans Auchan
-Fetch est utilisé pour récupérer les produits depuis le fichier `data.json`.
+---
 
-# 9. Comprendre l'Event Loop en JavaScript
+# 3. Les opérations CRUD
 
 ### Définition
-L'Event Loop est un mécanisme qui permet à JavaScript de gérer les opérations asynchrones tout en exécutant le code dans un seul thread principal.
 
-### Les éléments principaux
-- **Call Stack** : contient les fonctions en cours d'exécution.
-- **Web APIs** : gèrent certaines opérations comme les timers et les événements.
-- **Callback Queue** : contient les callbacks prêts à être exécutés.
-- **Microtask Queue** : contient notamment les callbacks des Promises.
+CRUD représente les quatre opérations principales permettant de gérer les données d'une application.
 
-### Exemple
+| Opération | Méthode HTTP | Description |
+|---|---|---|
+| Create | POST | Créer une chaîne |
+| Read | GET | Récupérer les chaînes |
+| Update | PUT | Modifier une chaîne |
+| Delete | DELETE | Supprimer une chaîne |
+
+### Exemple GET
+
 ```javascript
-console.log("1");
+async function getChannels() {
+    const response = await fetch(API_URL);
 
-setTimeout(function() {
-    console.log("2");
-}, 0);
+    if (!response.ok) {
+        throw new Error("Erreur lors de la récupération");
+    }
 
-Promise.resolve().then(function() {
-    console.log("3");
-});
-
-console.log("4");
+    return await response.json();
+}
 ```
 
-### Résultat
-```text
-1
-4
-3
-2
+### Exemple POST
+
+```javascript
+async function createChannel(channel) {
+    const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(channel)
+    });
+
+    if (!response.ok) {
+        throw new Error("Erreur lors de la création");
+    }
+
+    return await response.json();
+}
+```
+
+### Exemple PUT
+
+```javascript
+async function updateChannel(id, channel) {
+    const response = await fetch(`${API_URL}/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(channel)
+    });
+
+    if (!response.ok) {
+        throw new Error("Erreur lors de la modification");
+    }
+
+    return await response.json();
+}
+```
+
+### Exemple DELETE
+
+```javascript
+async function deleteChannel(id) {
+    const response = await fetch(`${API_URL}/${id}`, {
+        method: "DELETE"
+    });
+
+    if (!response.ok) {
+        throw new Error("Erreur lors de la suppression");
+    }
+
+    return true;
+}
+```
+
+### Application dans Smart Stream TV
+
+Les opérations CRUD permettent de gérer les chaînes depuis l'interface :
+
+- Afficher les chaînes.
+- Ajouter une nouvelle chaîne.
+- Modifier le statut d'une chaîne favorite.
+- Supprimer une chaîne.
+
+---
+
+# 4. JavaScript asynchrone : Promises et async/await
+
+### Définition
+
+Une opération asynchrone permet d'exécuter une tâche qui prend du temps sans bloquer l'exécution du reste du programme.
+
+Une Promise représente le résultat futur d'une opération asynchrone.
+
+### Les états d'une Promise
+
+- `Pending` : opération en attente.
+- `Fulfilled` : opération réussie.
+- `Rejected` : opération échouée.
+
+### Exemple avec then()
+
+```javascript
+fetch(API_URL)
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.log(error));
+```
+
+### Exemple avec async/await
+
+```javascript
+async function chargerChaines() {
+    try {
+        const response = await fetch(API_URL);
+
+        if (!response.ok) {
+            throw new Error("Erreur HTTP");
+        }
+
+        const chaines = await response.json();
+
+        console.log(chaines);
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 ```
 
 ### Explication
-1. Le code synchrone affiche 1.
-2. Le callback de setTimeout est programmé.
-3. Le callback de Promise est placé dans la Microtask Queue.
-4. Le code synchrone affiche 4.
-5. Les microtasks sont exécutées avant les callbacks de la Callback Queue.
-6. Le callback de setTimeout affiche 2.
 
-# 10. Gestion des réponses HTTP
+- `async` : déclare une fonction asynchrone.
+- `await` : attend le résultat d'une Promise.
+- `try` : contient le code à exécuter.
+- `catch` : permet de gérer les erreurs.
+
+### Application dans Smart Stream TV
+
+Les fonctions asynchrones permettent d'attendre les réponses de MockAPI avant d'afficher, d'ajouter, de modifier ou de supprimer une chaîne.
+
+---
+
+# 5. Gestion des erreurs HTTP
 
 ### Définition
-HTTP est un protocole de communication permettant au client et au serveur d'échanger des informations.
 
-Une réponse HTTP contient notamment un code de statut, des en-têtes et éventuellement un corps de réponse.
+Une erreur HTTP indique qu'une requête n'a pas pu être traitée correctement ou que le serveur a rencontré un problème.
 
 ### Principaux codes HTTP
 
 | Code | Signification |
 |---|---|
-| 200 | OK : requête réussie. |
-| 201 | Created : ressource créée. |
-| 204 | No Content : requête réussie sans contenu. |
-| 400 | Bad Request : requête incorrecte. |
-| 401 | Unauthorized : authentification nécessaire ou invalide. |
-| 403 | Forbidden : accès refusé. |
-| 404 | Not Found : ressource introuvable. |
-| 500 | Internal Server Error : erreur interne du serveur. |
+| 200 | OK : requête réussie |
+| 201 | Created : ressource créée |
+| 204 | No Content : requête réussie sans contenu |
+| 400 | Bad Request : requête incorrecte |
+| 401 | Unauthorized : authentification nécessaire ou invalide |
+| 403 | Forbidden : accès refusé |
+| 404 | Not Found : ressource introuvable |
+| 500 | Internal Server Error : erreur interne du serveur |
 
-### Vérifier une réponse avec Fetch
+### Vérification avec Fetch
+
 ```javascript
-fetch("./data/data.json")
-    .then(function(response) {
+fetch(API_URL)
+    .then(response => {
         if (!response.ok) {
             throw new Error("Erreur HTTP : " + response.status);
         }
 
         return response.json();
     })
-    .then(function(data) {
-        console.log(data);
-    })
-    .catch(function(error) {
-        console.log(error.message);
-    });
+    .then(data => console.log(data))
+    .catch(error => console.log(error.message));
 ```
 
-### Application dans Auchan
-La vérification de `response.ok` permet de détecter les erreurs HTTP avant de traiter les données récupérées.
+### Application dans Smart Stream TV
 
-# 11. Introduction aux Progressive Web Apps (PWA)
+La gestion des erreurs permet d'informer l'utilisateur lorsqu'une requête échoue et d'éviter de traiter des données incorrectes.
+
+---
+
+# 6. Manipulation du DOM
 
 ### Définition
-Une Progressive Web App est une application web qui utilise certaines technologies du navigateur pour offrir une expérience proche d'une application mobile ou de bureau.
 
-### Caractéristiques principales
-- **Responsive Design** : adaptation aux différentes tailles d'écran.
-- **Installabilité** : possibilité d'installer l'application sur un appareil compatible.
-- **Offline Support** : possibilité de fonctionner hors connexion grâce au Service Worker et au Cache.
-- **Web App Manifest** : fichier qui décrit l'application, son nom, ses icônes et son mode d'affichage.
-- **Service Worker** : script qui peut gérer le cache et certaines fonctionnalités réseau en arrière-plan.
+Le DOM (Document Object Model) représente la structure HTML d'une page sous forme d'objets que JavaScript peut manipuler.
 
-### Exemple de Manifest
-```json
-{
-    "name": "Auchan Catalogue",
-    "short_name": "Auchan",
-    "start_url": "./index.html",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#dc2626",
-    "icons": []
-}
+Il permet de modifier le contenu, les attributs et les styles des éléments HTML.
+
+### Méthodes principales
+
+- `getElementById()` : récupérer un élément avec son identifiant.
+- `querySelector()` : sélectionner le premier élément correspondant à un sélecteur CSS.
+- `querySelectorAll()` : sélectionner plusieurs éléments.
+- `createElement()` : créer un nouvel élément HTML.
+- `appendChild()` : ajouter un élément comme enfant.
+- `remove()` : supprimer un élément.
+- `textContent` : modifier le texte d'un élément.
+- `innerHTML` : modifier le contenu HTML.
+
+### Exemple
+
+```javascript
+const titre = document.getElementById("title");
+
+titre.textContent = "Smart Stream TV";
 ```
 
-### Application dans Auchan
-Le catalogue peut évoluer vers une PWA afin de permettre son installation et l'accès à certaines fonctionnalités hors connexion. Ces fonctionnalités nécessitent une configuration supplémentaire.
+### Création d'un élément
 
-# 12. Consommation d'une API avec Fetch JS
+```javascript
+const nouvelleChaine = document.createElement("div");
+
+nouvelleChaine.textContent = "Nouvelle chaîne";
+
+document.body.appendChild(nouvelleChaine);
+```
+
+### Application dans Smart Stream TV
+
+Le DOM permet d'afficher dynamiquement les chaînes récupérées depuis MockAPI et de mettre à jour l'interface après les actions de l'utilisateur.
+
+---
+
+# 7. Les événements JavaScript
 
 ### Définition
-Une API (Application Programming Interface) permet à une application de communiquer avec un autre service pour récupérer ou envoyer des données.
 
-### Exemple de requête GET
+Un événement est une action réalisée par l'utilisateur ou déclenchée par le navigateur.
+
+JavaScript permet de détecter ces actions avec `addEventListener()`.
+
+### Événements principaux
+
+- `click` : lorsqu'un utilisateur clique sur un élément.
+- `submit` : lorsqu'un formulaire est envoyé.
+- `input` : lorsque la valeur d'un champ change.
+- `change` : lorsque la valeur d'un élément est modifiée.
+- `DOMContentLoaded` : lorsque le document HTML est entièrement chargé et analysé.
+
+### Exemple
+
 ```javascript
-fetch("https://api.example.com/produits")
-    .then(function(response) {
-        if (!response.ok) {
-            throw new Error("Erreur lors de la récupération");
-        }
+const bouton = document.getElementById("myButton");
 
-        return response.json();
-    })
-    .then(function(produits) {
-        console.log(produits);
-    })
-    .catch(function(error) {
-        console.log(error);
-    });
+bouton.addEventListener("click", function() {
+    console.log("Bouton cliqué");
+});
 ```
 
-### Les principales méthodes HTTP
-- `GET` : récupérer des données.
-- `POST` : envoyer ou créer des données.
-- `PUT` : remplacer une ressource.
-- `PATCH` : modifier partiellement une ressource.
-- `DELETE` : supprimer une ressource.
+### Exemple avec un formulaire
 
-### Application dans Auchan
-Le fichier `data.json` représente la source de données locale du catalogue. La fonction `getProduits()` utilise Fetch pour récupérer les produits.
-
-# 13. Synchrone vs Asynchrone : async/await
-
-### Code synchrone
-Le code synchrone s'exécute instruction par instruction. Chaque instruction attend la fin de la précédente.
-
-### Code asynchrone
-Le code asynchrone permet de lancer une opération sans bloquer l'exécution du reste du programme pendant son attente.
-
-### Exemple avec Promise
 ```javascript
-fetch("./data/data.json")
-    .then(function(response) {
-        return response.json();
-    })
-    .then(function(data) {
-        console.log(data);
-    });
+form.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    console.log("Formulaire envoyé");
+});
 ```
 
-### Exemple avec async/await
+### Application dans Smart Stream TV
+
+Les événements permettent de gérer les clics sur les boutons, les favoris, la suppression des chaînes, la recherche et l'envoi du formulaire d'ajout.
+
+---
+
+# 8. Event Delegation en JavaScript
+
+### Définition
+
+L'Event Delegation est une technique qui consiste à placer un seul écouteur d'événement sur un élément parent pour gérer les événements de ses éléments enfants.
+
+Elle utilise le mécanisme de propagation des événements (Event Bubbling).
+
+### Exemple
+
 ```javascript
-async function chargerProduits() {
-    try {
-        let response = await fetch("./data/data.json");
+const channelsList = document.getElementById("channelsList");
 
-        if (!response.ok) {
-            throw new Error("Erreur HTTP");
-        }
+channelsList.addEventListener("click", function(e) {
 
-        let produits = await response.json();
-
-        console.log(produits);
-    } catch (error) {
-        console.log(error.message);
+    if (e.target.classList.contains("delete-btn")) {
+        console.log("Supprimer la chaîne");
     }
-}
 
-chargerProduits();
+});
 ```
 
 ### Explication
-- `async` : déclare une fonction asynchrone.
-- `await` : attend le résultat d'une Promise dans une fonction asynchrone.
-- `try` : contient le code à exécuter.
-- `catch` : permet de gérer les erreurs.
 
-### Application dans Auchan
-Fetch est utilisé avec les Promises (`then`) pour récupérer les produits. La syntaxe `async/await` permet d'écrire cette opération d'une autre manière.
+1. L'utilisateur clique sur un bouton enfant.
+2. L'événement remonte vers l'élément parent.
+3. Le parent détecte l'événement.
+4. `e.target` permet d'identifier l'élément qui a déclenché l'événement.
+
+### Application dans Smart Stream TV
+
+L'Event Delegation permet de gérer les actions sur les chaînes affichées dynamiquement avec un seul écouteur sur la liste des chaînes.
+
+---
+
+# 9. Les méthodes de tableaux en JavaScript
+
+### Définition
+
+JavaScript propose plusieurs méthodes permettant de parcourir, filtrer, transformer et rechercher des éléments dans un tableau.
+
+### Méthode filter()
+
+`filter()` retourne un nouveau tableau contenant uniquement les éléments qui respectent une condition.
+
+```javascript
+const chaines = [
+    { name: "France 2", country: "France" },
+    { name: "2M", country: "Maroc" },
+    { name: "France 3", country: "France" }
+];
+
+const chainesFrance = chaines.filter(chaine => {
+    return chaine.country === "France";
+});
+
+console.log(chainesFrance);
+```
+
+### Méthode find()
+
+`find()` retourne le premier élément qui respecte une condition.
+
+```javascript
+const chaine = chaines.find(chaine => {
+    return chaine.name === "France 2";
+});
+```
+
+### Méthode map()
+
+`map()` permet de transformer chaque élément d'un tableau et retourne un nouveau tableau.
+
+```javascript
+const noms = chaines.map(chaine => chaine.name);
+
+console.log(noms);
+```
+
+### Méthode forEach()
+
+`forEach()` permet de parcourir chaque élément d'un tableau sans retourner un nouveau tableau.
+
+```javascript
+chaines.forEach(chaine => {
+    console.log(chaine.name);
+});
+```
+
+### Application dans Smart Stream TV
+
+Ces méthodes permettent de rechercher des chaînes, filtrer par pays, afficher les favoris et parcourir les données récupérées depuis l'API.
+
+---
+
+# 10. Les objets en JavaScript
+
+### Définition
+
+Un objet est une structure qui permet de regrouper plusieurs informations sous forme de propriétés et de valeurs.
+
+### Exemple
+
+```javascript
+const chaine = {
+    id: 1,
+    channelNumber: 10,
+    name: "France 2",
+    country: "France",
+    isFavorite: false,
+    isBlacklisted: false
+};
+```
+
+### Accéder aux propriétés
+
+```javascript
+console.log(chaine.name);
+
+console.log(chaine["channelNumber"]);
+```
+
+### Modifier une propriété
+
+```javascript
+chaine.isFavorite = true;
+```
+
+### Ajouter une propriété
+
+```javascript
+chaine.category = "Information";
+```
+
+### Supprimer une propriété
+
+```javascript
+delete chaine.category;
+```
+
+### Application dans Smart Stream TV
+
+Chaque chaîne est représentée par un objet contenant ses informations et son état (favori ou blacklistée).
+
+---
+
+# 11. Les formulaires en JavaScript
+
+### Définition
+
+Un formulaire HTML permet à l'utilisateur de saisir des informations et de les envoyer à l'application.
+
+JavaScript permet de récupérer les valeurs, vérifier les champs et traiter les données.
+
+### Récupérer une valeur
+
+```javascript
+const name = document.getElementById("channelName").value;
+```
+
+### Empêcher le rechargement de la page
+
+```javascript
+form.addEventListener("submit", function(e) {
+    e.preventDefault();
+});
+```
+
+### Validation simple
+
+```javascript
+if (name.trim() === "") {
+    console.log("Le nom est obligatoire");
+}
+```
+
+### Application dans Smart Stream TV
+
+Le formulaire permet d'ajouter une nouvelle chaîne en saisissant son numéro et son nom. Les champs sont vérifiés avant l'envoi des données à MockAPI.
+
+---
+
+# 12. JSON et échanges de données
+
+### Définition
+
+JSON (JavaScript Object Notation) est un format léger utilisé pour représenter et échanger des données entre les applications et les serveurs.
+
+### Exemple JSON
+
+```json
+{
+    "channelNumber": 10,
+    "name": "France 2",
+    "isFavorite": false,
+    "isBlacklisted": false
+}
+```
+
+### Méthodes principales
+
+- `JSON.stringify()` : transforme un objet JavaScript en chaîne JSON.
+- `JSON.parse()` : transforme une chaîne JSON en objet JavaScript.
+
+### Exemple
+
+```javascript
+const chaine = {
+    name: "France 2",
+    isFavorite: true
+};
+
+const chaineJSON = JSON.stringify(chaine);
+
+const chaineObjet = JSON.parse(chaineJSON);
+```
+
+### Application dans Smart Stream TV
+
+JSON est utilisé pour envoyer les informations des chaînes à MockAPI et convertir les réponses du serveur en objets JavaScript.
+
+---
+
+# 13. LocalStorage en JavaScript
+
+### Définition
+
+LocalStorage est un mécanisme de stockage du navigateur qui permet de conserver des données même après la fermeture du navigateur.
+
+### Méthodes principales
+
+- `setItem()` : enregistrer une donnée.
+- `getItem()` : récupérer une donnée.
+- `removeItem()` : supprimer une donnée.
+- `clear()` : supprimer toutes les données.
+
+### Exemple
+
+```javascript
+localStorage.setItem("filter", "favorites");
+
+const savedFilter = localStorage.getItem("filter");
+
+console.log(savedFilter);
+```
+
+### Stocker un objet
+
+```javascript
+const chaine = {
+    name: "France 2",
+    isFavorite: true
+};
+
+localStorage.setItem("chaine", JSON.stringify(chaine));
+```
+
+### Récupérer un objet
+
+```javascript
+const chaineStockee = JSON.parse(
+    localStorage.getItem("chaine")
+);
+```
+
+### Application dans Smart Stream TV
+
+LocalStorage peut être utilisé pour mémoriser le filtre sélectionné par l'utilisateur et restaurer son choix après l'actualisation de la page.
+
+---
+
+# Conclusion
+
+Smart Stream TV permet de mettre en pratique plusieurs notions fondamentales du développement web avec JavaScript :
+
+- Communication avec une API REST.
+- Utilisation de Fetch et des méthodes HTTP.
+- Manipulation du DOM.
+- Gestion des événements et Event Delegation.
+- Manipulation des tableaux et des objets.
+- Création et validation des formulaires.
+- Gestion des opérations asynchrones.
+- Stockage des préférences avec LocalStorage.
+
+Ces notions permettent de développer une application web dynamique, interactive et organisée.
