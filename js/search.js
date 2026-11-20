@@ -10,11 +10,11 @@ export function initRecherche(chaines){
 
         const rechercheOk = chaine.name.toLowerCase().includes(valeurChercher) || chaine.channelNumber.toString().includes(valeurChercher);
         const paysOk = countrySelect.value === "All" || chaine.country === countrySelect.value;
-        return rechercheOk && paysOk;
+        return rechercheOk && paysOk ;
     });
     afficheChaine(chainFiltrer);
     }
     recherche.addEventListener("input",filtrerChaines);
     countrySelect.addEventListener("change", filtrerChaines);
-
+    return filtrerChaines;
 }

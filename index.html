@@ -7,6 +7,11 @@
         <link rel="stylesheet" href="./css/output.css">
     </head>
     <body>
+        <div id="loading" class="fixed inset-0 z-10 hidden flex-col items-center justify-center gap-4 bg-slate-950">
+            <div class="h-12 w-12 animate-spin rounded-full border-4 border-white/10 border-t-indigo-500"></div>
+            <p class="text-sm text-slate-300">Chargement des chaînes...</p>
+        </div>
+        <p id ="errorMessage" class = "hidden">Impossible de cherger les chaines .</p>
         <header class="flex flex-col gap-4 w-full bg-[#0F172A] px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6">
            <div class="flex flex-row items-center gap-3">
                 <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-600">
@@ -14,13 +19,15 @@
                 </div>
                     <h1 class="font-bold text-white">Smart Stream TV</h1>
            </div>
+           <div class="flex items-center gap-3">
                 <div class="w-full sm:w-72 ">
                     <input  id = "searchInput" type="text" placeholder="Rechercher par nom ou numéro..." class="w-full min-w-0  rounded-lg border border-[#334155] bg-[#1E293B] px-4 py-2  text-white placeholder-[#94A3B8] outline-none focus:border-[#9333EA] ">
                 </div>
-            
+                <button id="btnAjouter" class="whitespace-nowrap rounded-lg bg-purple-600 px-4 py-2 text-sm text-white hover:bg-purple-700" >+ Ajouter</button>
+            </div>
         </header>
-        <main class="flex min-h-[calc(100vh-56px)] flex-col bg-[#0F172A] md:flex-row">
-            <aside class="w-full border-b border-[#1E293B] p-4 md:w-64 md:border-b-0 md:border-r">
+        <main class="flex min-h-[calc(100vh-56px)] flex-col bg-[#0F172A] md:flex-row ">
+            <aside class="w-full border-b border-[#1E293B] p-4 md:w-64 md:border-b-0 md:border-r lg:w-[30%]">
                 <div class="mb-4 flex items-center justify-between">
                     <h2 class="font-semibold text-white">Chaines</h2>
                     <span id="nbrChaine" class="rounded bg-[#1E293B] px-2 py-1 text-xs text-[#94A3B8]"></span>
@@ -30,9 +37,14 @@
                     <option value="FR">France</option>
                     <option value="ES">Espagne</option>
                 </select>
-                <div id="channelsList" class="flex flex-col gap-3">
+                <div class="mb-4 flex gap-2">
+                    <button id = "btnAll" class="flex rounded-lg bg-purple-600 px-3 py-2 text-sm text-white">Toutes</button>
+                    <button id="btnFavoris" class="flex rounded-lg bg-[#1E293B] px-3 py-2 text-sm text-white">Mes Favoris</button>
+                </div>
+                <div id="channelsList" class="flex flex-col gap-3 ">
                     
                 </div>
+                
             </aside>
             <section class="min-w-0 flex-1 p-4 md:p-6">
                 <div class="relative flex  items-center justify-center overflow-hidden rounded-xl bg-[#1E293B] ">
@@ -49,6 +61,22 @@
                 </div>
             </section>
         </main>
+        <div id="modal" class="fixed inset-0 z-20 hidden items-center justify-center bg-black/70 p-4">
+            <div class="w-full max-w-md rounded-xl border border-[#334155] bg-[#1E293B] p-6 shadow-xl">
+                <div class="mb-6 flex items-center justify-between">
+                    <h2 class="text-lg font-bold text-white">Ajouter une chaîne</h2>
+                    <button id="btnFermer" type="button" class="text-2xl text-gray-400 hover:text-white">&times;</button>
+                </div>
+                <form id="cForm" class="flex flex-col gap-4">
+
+                        <input type="text" id="NChaine" placeholder="Numéro de chaîne" class="rounded-lg border border-[#334155] bg-[#0F172A] p-3 text-white outline-none focus:border-purple-500">
+                        <input type="text" id="NChaineN" placeholder="Nom de chaîne" class="rounded-lg border border-[#334155] bg-[#0F172A] p-3 text-white outline-none focus:border-purple-500">
+                        <p id="mForm" class="text-sm text-red-400"></p>
+                        <button type="submit" class="rounded-lg bg-purple-600 px-4 py-2 text-white hover:bg-purple-700">Ajouter</button>
+
+                    </form>
+            </div>
+        </div>
         <script type="module" src="./js/app.js"></script>
     </body>
 </html>
