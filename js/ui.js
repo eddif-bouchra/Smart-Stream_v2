@@ -10,9 +10,9 @@ export function afficheChaine(chaines){
     chaines.forEach((e) => {
         const channelElement = document.createElement("div");
         channelElement.dataset.id = e.id;
-        channelElement.className = "flex items-center gap-2 rounded-lg bg-white p-3 text-slate-900";
-        channelElement.innerHTML = `<div class="flex gap-2 m-auto">
-                                        <img src="${e.logo}" alt="${e.name}" class="h-8 w-8 object-contain">
+        channelElement.className = "flex  items-center gap-2 rounded-lg bg-white p-3 text-slate-900 w-full";
+        channelElement.innerHTML = `<div class="flex gap-2 m-auto ">
+                                        <img src="${e.logo}" alt="${e.name}" class="h-8 w-8 object-contain ">
                                         <span>${e.channelNumber}</span>
                                         <div class ="min-w-0">
                                             <p class="truncate text-sm">${e.name}</p>
@@ -20,6 +20,7 @@ export function afficheChaine(chaines){
                                         </div>
                                     </div>
                                     <button data-action="favorite" class="text-amber-400">${e.isFavorite ? "★" : "☆"}</button>
+                                    <button data-action = "delete">🚫</button>
                                     `;
         channelElement.addEventListener("click",function(event){
             if (event.target.closest('[data-action="favorite"]')) return;
